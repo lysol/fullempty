@@ -1,2 +1,4 @@
 #!/bin/bash
 
+rsync -atvz bin/ loam:~/public_html/
+
