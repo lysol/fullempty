@@ -1,0 +1,11 @@
+#!/bin/bash
+declare -A templatevars
+templatevars['<% year %>']=$(date +%Y)
+
+output=$(cat src/index.html)
+for i in "${!templatevars[@]}"
+do
+    output=$(echo $output | sed -e "s/$i/${templatevars[@]}/g")
+done
+
+echo $output>$BUILD_DIR/index.html
