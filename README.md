@@ -13,7 +13,7 @@ for the output path. Additionally, default properties are included in `content/d
 including the default template `template.html`.
 
 Once your files are in place, you can run `make build` to build the html files, `make sync`
-to rsync the files to the location specified in the makefile in the `rsync_target` variable,
-and `make clean` to delete everything in the build dir `bin`.
+to rsync the files to the location specified in the makefile in the `SYNC_TARGET` variable,
+and `make clean` to delete everything in the build dir `build`.
 
 Or, simply run `make` to all those steps in order.

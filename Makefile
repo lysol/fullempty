@@ -1,20 +1,20 @@
 .PHONY: build clean sync
 
-build_dir = ./build/
+BUILD_DIR = ./build/
 # ssh target
-rsync_target = loam:~/public_html/
+SYNC_TARGET = loam:~/public_html/
 
 all: build sync clean
 
 build:
 	@ echo Building.
-	@./src/index.sh
+	@BUILD_DIR=$(BUILD_DIR) ./src/index.sh
 
 clean:
 	@echo Cleaning.
-	rm -rf $(build_dir)*
+	rm -rf $(BUILD_DIR)*
 
 sync:
 	@echo Syncing to server
-	rsync -atv $(build_dir) $(rsync_target)
+	rsync -atv $(BUILD_DIR) $(SYNC_TARGET)
 
