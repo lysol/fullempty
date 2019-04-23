@@ -1,11 +1,26 @@
 #!/bin/bash
 declare -A templatevars
-templatevars['<% year %>']=$(date +%Y)
+templatevars['year']=$(date +%Y)
 
-output=$(cat src/index.html)
-for i in "${!templatevars[@]}"
-do
-    output=$(echo $output | sed -e "s/$i/${templatevars[@]}/g")
+for k in `jq -r 'to_entries[] | .key' <content/default.json`; do
+    templatevars[${k}]=$(jq -r ".${k}" <content/default.json)
 done
 
-echo $output>$BUILD_DIR/index.html
+for n in `ls -1 content/*.json | grep -v default.json | sort -V`; do
+    echo "Processing $n"
+    declare -A docvars
+    for k in "${!templatevars[@]}"; do docvars[$k]="${templatevars[$k]}"; done
+    for k in `jq -r 'to_entries[] | .key' <$n`; do
+        val=$(cat $n | jq -r ".${k}")
+        docvars[$k]=$val
+    done
+    output=$(cat ${docvars['template']})
+    docvars[content]=$(cat ${docvars[content]})
+    for i in "${!docvars[@]}"
+    do
+        regex=$(echo "s;<% $i %>;${docvars[$i]};g")
+        output=$(echo $output | sed -e "$regex")
+    done
+    outfn="$BUILD_DIR/${docvars[filename]}"
+    echo $output>$outfn
+done
