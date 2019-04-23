@@ -1,6 +1,8 @@
 .PHONY: build clean sync
 
-BUILD_DIR=./bin
+build_dir = ./bin
+# ssh target
+rsync_target = loam:~/public_html/
 
 all: build sync clean
 
@@ -9,8 +11,8 @@ build:
 	@./src/index
 
 clean:
-	./clean
+	rm -rf $(build_dir)/*
 
 sync:
-	./sync
+	rsync -atv ./bin/ $(rsync_target)
 
