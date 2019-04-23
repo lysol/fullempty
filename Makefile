@@ -8,7 +8,7 @@ all: build sync clean
 
 build:
 	@ echo Building.
-	@./src/index
+	@./src/index.sh
 
 clean:
 	@echo Cleaning.
