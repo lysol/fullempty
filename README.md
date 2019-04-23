@@ -2,7 +2,7 @@
 
 This is a static site generator for my personal (browser) homepage.
 It's not fully genericized but can be simply modified to suit anyone else's similar
-needs.
+needs. Requires only bash and jq.
 
 ## Quickstart
 
