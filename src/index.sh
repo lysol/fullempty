@@ -4,6 +4,7 @@
 # sourced from default.json
 declare -A templatevars
 templatevars['year']=$(date +%Y)
+templatevars['date']=$(date)
 
 for k in `jq -r 'to_entries[] | .key' <content/default.json`; do
     templatevars[${k}]=$(jq -r ".${k}" <content/default.json)
@@ -35,4 +36,5 @@ for n in `ls -1 content/*.json | grep -v default.json | sort -V`; do
     done
     outfn="$BUILD_DIR/${docvars[filename]}"
     echo $output>$outfn
+    touch -d "${docvars[date]}" $outfn
 done
