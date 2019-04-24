@@ -2,14 +2,14 @@
 
 This is a static site generator for my personal (browser) homepage.
 It's not fully genericized but can be simply modified to suit anyone else's similar
-needs. Requires only bash and jq.
+needs. The only prerequisite for this system is bash 4.
 
 ## Quickstart
 
-See `content/index.json` and `content/index.html` for a simple example. There are no
+See `content/index.post.sh` and `content/index.html` for a simple example. There are no
 automatic loops or anything like that. Simply fill out the `content` property to provide
 a reference to the html file with the contents to be included in the template, `filename`
-for the output path. Additionally, default properties are included in `content/default.json`,
+for the output path. Additionally, default properties are included in `content/default.sh`,
 including the default template `template.html`.
 
 Once your files are in place, you can run `make build` to build the html files, `make sync`

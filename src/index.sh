@@ -5,27 +5,21 @@
 declare -A templatevars
 templatevars['year']=$(date +%Y)
 templatevars['date']=$(date)
-
-defaultjson=$(< content/default.json)
-for k in `echo "$defaultjson" | jq -r 'to_entries[] | .key'`; do
-    templatevars[${k}]=$(echo $defaultjson | jq -r ".${k}")
-done
+# set default template vars
+. content/default.sh
 
 # here we iterate over every file, copy the values from $templatevars,
 # and include anything from the json file
-for n in `ls -1 content/*.json | grep -v default.json | sort -V`; do
+for n in `ls -1 content/*.post.sh | grep -v default.sh | sort -V`; do
     echo "Processing $n"
 
     # initialize document associative array prefilled with tempaltevars' values
-    declare -A docvars
+    declare -A docvars=()
     for k in "${!templatevars[@]}"; do docvars[$k]="${templatevars[$k]}"; done
 
-    # (probably an easier way to do this, but) set the values from the file
-    docjson=$(<$n)
-    for k in `echo "$docjson" | jq -r 'to_entries[] | .key'`; do
-        val=$(echo "$docjson" | jq -r ".${k}")
-        docvars[$k]=$val
-    done
+    # source file to set variables
+    . $n
+
     # "template" is a special value that is the location of the base template to include
     output=$(cat ${docvars['template']})
 
@@ -56,6 +50,8 @@ for n in `ls -1 content/*.json | grep -v default.json | sort -V`; do
     done
 
     outfn="$BUILD_DIR/${docvars[filename]}"
+    # create any intermediate directories
+    mkdir -p $(dirname $outfn)
     echo $output>$outfn
     touch -d "${docvars[date]}" $outfn
 done
