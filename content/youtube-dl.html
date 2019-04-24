@@ -1,0 +1,40 @@
+<div class="post">
+    <p>I'm an avid fan of the <a href="https://youtube-dl.org/">youtube-dl project</a>. By
+    now most people know that youtube-dl can retrieve videos on nearly any website, especially
+    if you're willing to pop open your browser's web inspector looking for <span class="code">.m3u8</span> playlists. But personally, I find it incredibly useful as a tool for archiving
+    videos more comprehensively. Some of youtube-dl's extended features facilitate this, and its
+    man page is intensely detailed, in stark contrast to a lot of newer projects.</p>
+
+    <p>Previously, I relied on bash aliases for default options for youtube-dl, but finally
+    noticed that you can simply provide a config file, <span class="code">.config/youtube-dl/config</span>. Its format is simply the switches you'd normally provide to youtube-dl, except
+    one per line.</p>
+
+    <p>Especially in the case of Youtube, youtube-dl provides several options for
+    archiving not just the video, but any metadata, subtitles, annotations (despite being
+    deprecated/removed from Youtube), and timestamps. My config is as follows:</p>
+
+    <p class="code">
+        -i<br>
+        --write-sub<br>
+        --write-auto-sub<br>
+        --sub-lang en<br>
+        --download-archive ~/.ytdl-archive<br>
+        --restrict-filenames<br>
+        --write-description<br>
+        --write-info-json<br>
+        --write-annotations<br>
+        --write-thumbnail<br>
+        -o '~/save/yt/%(uploader)s/%(uploader)s_%(title)s_%(id)s_%(upload_date)s.%(ext)s'<br>
+    </p>
+
+    <p>These options not only save automatically generated subtitles, but those uploaded
+    by users. My filename format is comprehensive for later search and with a little work,
+    parsing. Another notable option is the <span class="code">--download-archive</span> switch. 
+    This specifies a file in which downloaded videos' IDs are recorded. If you attempt to
+    download the same video a second time, youtube-dl will check this file if it was
+    downloaded and refuse to do so if you already have.</p>
+
+    <p>With these options, the videos will also be saved in a subdirectory named after the
+    original uploader.</p>
+</div>
+

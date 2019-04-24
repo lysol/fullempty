@@ -55,3 +55,7 @@ for n in `ls -1 content/*.post.sh | grep -v default.sh | sort -V`; do
     echo $output>$outfn
     touch -d "${docvars[date]}" $outfn
 done
+
+# finally, copy assets
+echo copying assets
+rsync -at content/assets/ $BUILD_DIR/assets/
