@@ -13,7 +13,7 @@ templatevars['date']=$(date)
 for n in `ls -1 content/*.post.sh | grep -v default.sh | sort -V`; do
     echo "Processing $n"
 
-    # initialize document associative array prefilled with tempaltevars' values
+    # initialize document associative array prefilled with templatevars' values
     declare -A docvars=()
     for k in "${!templatevars[@]}"; do docvars[$k]="${templatevars[$k]}"; done
 
