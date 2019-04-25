@@ -29,7 +29,7 @@ function replace_tag {
 # here we iterate over every file, copy the values from $templatevars,
 # and include anything from the json file
 
-workfiles=$(ls -1 content/*.post.sh | grep -v default.sh | sort -V)
+workfiles=$(ls -1 content/*.post.sh | grep -v default.sh)
 tab=$'\t'
 
 echo First pass
@@ -49,7 +49,7 @@ done
 
 posttext=""
 IFS=$'\n'
-for line in $(cat "${POST_INDEX}" | sort -n); do
+for line in $(cat "${POST_INDEX}" | sort -nr); do
     IFS=$'\t' vars=(${line})
     # abuse the previous IFS little to put a newline in lol
     posttext="${posttext}${IFS}<li>$(date -d @"${vars[0]}" '+%Y-%m-%d') <a href=\"${vars[1]}\">${vars[2]}</a></li>"
