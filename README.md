@@ -17,3 +17,9 @@ to rsync the files to the location specified in the makefile in the `SYNC_TARGET
 and `make clean` to delete everything in the build dir `build`.
 
 Or, simply run `make` to all those steps in order.
+
+## Post List
+
+Items in `content` with the `type` value in their array set to `post` will be compiled in
+`posts.csv`, and a list of `<li>` elements with dates and links to those posts will be
+placed in `templatevars[postlist]`, for easy inclusion in a list element in any document.
