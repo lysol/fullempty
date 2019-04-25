@@ -1,0 +1,42 @@
+<div class="post">
+    <p>I'm trying something with this site: a pure Bash 4 static site generator,
+    available on <a href="https://github.com/lysol/fullempty">github</a>. </p>
+
+    <p>The syntax is simple, but a tailored specifically for this site. For example, the index page's file named <span class="code">content/index.post.sh</span> has the following structure:</p>
+
+    <p class="code">
+        docvars[date]='2019-04-22 3:53 PM CDT'<br>
+        docvars[title]=fullempty.sh<br>
+        docvars[content]=content/index.html<br>
+        docvars[filename]=index.html<br>
+    </p>
+
+    <p>The generator makes heavy use of associative arrays. Each file matched by the glob <span class="code">contents/*.post.sh</span>
+    is sourced within a loop to populate an array that is initialized with a default set of
+    values (included in <span class="code">src/index.sh</span>). Each key in the array is then expanded by searching for <span class="code">&lt;% key %&gt;</span> and using sed to replace it with the value defined in the array.
+    </p>
+
+    <p>Once this step is complete, the <span class="code">content</span> value in the array is used as the body of the page, outputted to a file in <span class="code">build/</span>, using <span class="code">filename</span>'s value in the array.</p>
+
+    <h2>Posts</h2>
+
+    <p>Any pages with <span class="code">type</span> set to <span class="code">post</span> are treated slightly differently. They are processed normally, but also added to a tab-delimited csv named <span class="code">posts.csv</span> that is used to build a list of <span class="code">&lt;li&gt;</span> elements for later inclusion as a chronologically reversed order of post links. I intend to also build an RSS file for these posts using this index.</p>
+
+    <h2>Closing Thoughts</h2>
+
+    <p>I focused on a shallow dependency tree (in fact, a non-existent one).
+    While this ended up being largely hassle free, the data structures available to bash
+    preclude a lot of advanced transforms. If bash supported multi-dimensional arrays, that
+    may have simplified a little code. The simple solution was to iterate through the list
+    of files twice, which is only a little slower.</p>
+
+    <p>I fought constant internal critiques
+    on what I was doing, such as impulses to just trash the entire work and use a simple
+    Python script with <a href="http://jinja.pocoo.org/">Jinja2</a>. In the end I'm glad I
+    stuck it out, though the lack of more advanced templating patterns is limiting, long term. I implemented variable expansion within other assignments in files, however, so it should be possible
+    to simply create those kinds of control structures within bash scripts referenced by
+    the posts themselves. My only other closing thought is the directory structure is entirely
+    flat and will get messy in short order.</p>
+
+</div>
+
