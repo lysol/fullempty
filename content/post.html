@@ -2,14 +2,18 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>fullempty.sh - <% title %></title>
+    <title>fullempty.sh - <% title %> - <% nicedate %></title>
     <style type="text/css">
         <% css %>
     </style>
 </head>
 
 <body>
-    <h1><% title %> <a href="/" class="back">Back</a></h1>
+    <h1>
+        <a href="./" class="back">&laquo; fullempty.sh</a>
+        <% title %>
+        <span class="title-date"><% nicedate %></span>
+    </h1>
 
     <div class="content">
         <% content %>

@@ -72,6 +72,11 @@ for n in $workfiles; do
     # "template" is a special value that is the location of the base template to include
     output=$(< "${docvars['template']}")
 
+    # if "date" is present, make a nice human-readable date.
+    if [ ${docvars[date]+_} ]; then
+        docvars[nicedate]="$(date -d "${docvars[date]}" '+%Y-%m-%d')"
+    fi
+
     # "content" is more special, it's a filename that we cat the contents of to get the
     # actual value. might make it this more explicit rather than implicit later
     contentPath="${docvars[content]}"

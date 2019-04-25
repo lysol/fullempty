@@ -16,6 +16,10 @@
             border-top: .8px solid #000;
         }
 
+        .title-date {
+            font-size: 12pt;
+        }
+
         .main {
             display: flex;
             flex-direction: row;
@@ -38,5 +42,5 @@
         }
 
         .back {
-            font-size: 12pt;
+            font-size: 14pt;
         }
