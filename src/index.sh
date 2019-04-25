@@ -8,6 +8,8 @@ templatevars['date']=$(date)
 # set default template vars
 . content/default.sh
 POST_INDEX="${BUILD_DIR}${POST_INDEX}"
+# make the build directory if it's not there yet :)
+mkdir -p $(dirname "${POST_INDEX}")
 
 last_replace=""
 function replace_tag {
