@@ -7,12 +7,58 @@ templatevars['year']=$(date +%Y)
 templatevars['date']=$(date)
 # set default template vars
 . content/default.sh
+POST_INDEX="${BUILD_DIR}${POST_INDEX}"
+
+last_replace=""
+function replace_tag {
+    local key="$1"
+    local val="$2"
+    local output="$3"
+
+    # hopefully this is enough to handle any ;s in the value
+    local baseregexval=$(echo $val | sed -e 's/;/\\;/g')
+    # replace the template tags
+    local regex=$(echo "s;<% $key %>;$baseregexval;g")
+    last_replace=$(echo $output | sed -e "$regex")
+}
 
 # here we iterate over every file, copy the values from $templatevars,
 # and include anything from the json file
-for n in `ls -1 content/*.post.sh | grep -v default.sh | sort -V`; do
+
+workfiles=$(ls -1 content/*.post.sh | grep -v default.sh | sort -V)
+tab=$'\t'
+
+echo First pass
+for n in $workfiles; do
     echo "Processing $n"
 
+    # initialize document associative array prefilled with templatevars' values
+    declare -A docvars=()
+    for k in "${!templatevars[@]}"; do docvars[$k]="${templatevars[$k]}"; done
+
+    # source file to set variables
+    . $n
+    if [[ "${docvars[type]}" == "post" ]]; then
+        echo "$(date -d "${docvars[date]}" "+%s")${tab}${docvars[filename]}${tab}${docvars[title]}">>"${POST_INDEX}"
+    fi
+done
+
+posttext=""
+IFS=$'\n'
+for line in $(cat "${POST_INDEX}" | sort -n); do
+    IFS=$'\t' vars=(${line})
+    # abuse the previous IFS little to put a newline in lol
+    posttext="${posttext}${IFS}<li>$(date -d @"${vars[0]}" "+%Y-%m-%d") <a href=\"${vars[1]}\">${vars[2]}</a></li>"
+done
+unset IFS
+
+# set the post list in the base template so it can be used later
+templatevars['postitems']=${posttext}
+
+echo Second pass
+echo $workfiles
+for n in $workfiles; do
+    echo "Working on $n (again)"
     # initialize document associative array prefilled with templatevars' values
     declare -A docvars=()
     for k in "${!templatevars[@]}"; do docvars[$k]="${templatevars[$k]}"; done
@@ -32,6 +78,7 @@ for n in `ls -1 content/*.post.sh | grep -v default.sh | sort -V`; do
         continue
     fi
 
+    # considering doing this check for any value honestly
     if [[ -x "$contentPath" ]]; then
         # file is executable, execute it to get our content
         docvars[content]=$($contentPath)
@@ -42,14 +89,19 @@ for n in `ls -1 content/*.post.sh | grep -v default.sh | sort -V`; do
 
     for i in "${!docvars[@]}"
     do
-        # hopefully this is enough to handle any ;s in the value
-        baseregexval=$(echo ${docvars[$i]} | sed -e 's/;/\\;/g')
-        # replace the template tags
-        regex=$(echo "s;<% $i %>;$baseregexval;g")
-        output=$(echo $output | sed -e "$regex")
+        # the content value is "special"
+        # we do replacements on this as well.
+        # possibly we could do it for every value but that
+        # might get weird
+        if [[ "$i" != "content" ]]; then
+            replace_tag "$i" "${docvars[$i]}" "${docvars[content]}"
+            docvars[content]="$last_replace"
+        fi
+        replace_tag "$i" "${docvars[$i]}" "$output"
+        output="$last_replace"
     done
 
-    outfn="$BUILD_DIR/${docvars[filename]}"
+    outfn="${BUILD_DIR}${docvars[filename]}"
     # create any intermediate directories
     mkdir -p $(dirname $outfn)
     echo $output>$outfn

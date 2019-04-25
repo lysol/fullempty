@@ -3,12 +3,13 @@
 BUILD_DIR = ./build/
 # ssh target
 SYNC_TARGET = loam:~/public_html/
+POST_INDEX = posts.csv
 
 all: build sync clean
 
 build:
 	@ echo Building.
-	@BUILD_DIR=$(BUILD_DIR) ./src/index.sh
+	@BUILD_DIR=$(BUILD_DIR) POST_INDEX=$(POST_INDEX) ./src/index.sh
 
 clean:
 	@echo Cleaning.
