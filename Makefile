@@ -11,11 +11,11 @@ build:
 	@ echo Building.
 	@BUILD_DIR=$(BUILD_DIR) POST_INDEX=$(POST_INDEX) ./src/index.sh
 
-clean:
-	@echo Cleaning.
-	rm -rf $(BUILD_DIR)*
-
 sync:
 	@echo Syncing to server
 	rsync -atv $(BUILD_DIR) $(SYNC_TARGET)
+
+clean:
+	@echo Cleaning.
+	rm -rf $(BUILD_DIR)*
 
