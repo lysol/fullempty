@@ -3,7 +3,6 @@ function replace_tags {
     keys="${!vars[@]}"
     local newoutput=""
 
-    declare -a _tokens=()
     local current_token=''
     # text
     local BODY=1
