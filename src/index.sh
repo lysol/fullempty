@@ -86,8 +86,7 @@ for n in $workfiles; do
 
     for i in "${!docvars[@]}"
     do
-        # this might be bad but we also go through each existing
-        # docvar and do replacements there too
+        # replace tag values in both all the other docvars but our content
         docvars["${i}"]=$(replace_tags docvars <<<"${docvars[${i}]}")
         output=$(replace_tags docvars <<<"${output}")
     done
