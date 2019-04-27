@@ -88,15 +88,8 @@ for n in $workfiles; do
     do
         # this might be bad but we also go through each existing
         # docvar and do replacements there too
-        for j in "${!docvars[@]}"
-        do
-            if [[ "${i}" != "${j}" ]]; then
-                replace_tag "${i}" "${docvars[${i}]}" "${docvars[${j}]}"
-                docvars["${j}"]="${last_replace}"
-            fi
-        done
-        replace_tag "${i}" "${docvars[$i]}" "${output}"
-        output="${last_replace}"
+        docvars["${i}"]=$(replace_tags docvars <<<"${docvars[${i}]}")
+        output=$(replace_tags docvars <<<"${output}")
     done
 
     outfn="${BUILD_DIR}${docvars[filename]}"
