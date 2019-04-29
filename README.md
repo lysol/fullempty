@@ -18,3 +18,7 @@ and `make clean` to delete everything in the build dir `build`.
 
 Or, simply run `make` to all those steps in order.
 
+## template tag types
+
+* `<% key %>` includes the specified key in `$docvars` in the document.
+* `<$ echo some bash $>` is `eval`'d in the same loop, in the scope of the main bash script.
