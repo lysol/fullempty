@@ -37,6 +37,14 @@ function replace_tags {
                             current_token="${current_token}${c}"
                         fi
                         ;;
+                    "${cmd_char}")
+                        if [[ "${current_token}" == "${open_tag}" ]]; then
+                            current_state="${CMD}"
+                            current_token=""
+                        else
+                            current_token="${current_token}${c}"
+                        fi
+                        ;;
                     *)
                         current_token="${current_token}${c}"
                         ;;
@@ -82,40 +90,16 @@ function replace_tags {
                 esac
                 ;;
             "${CMD}")
-                case "${c}" in
-                    " ")
-                        # eat it
-                        ;;
-                    "${cmd_char}")
-                        # cmd ending
-                        current_token="${c}"
-                        ;;
-                    "${close_tag}")
-                        # cmd ending
-                        if [[ "${current_token}" == "${cmd_char}" ]]; then
-                            current_state="${BODY}"
-                            val=$($current_token)
-                            newoutput="${newoutput}${val}"
-                            current_token=""
-                        fi
-                        ;;
-                    *)
-                        current_state="${IN_CMD}"
-                        current_token="${c}"
-                        ;;
-                esac
-                ;;
-            "${IN_CMD}")
-                case "${c}" in
-                    "${cmd_char}")
-                        # ending IN_CMD
-                        # execute code
-                        current_state="${CMD}"
-                        ;;
-                    *)
-                        current_token="${current_token}${c}"
-                        ;;
-                esac
+                let "codelen=${#current_token} - 2"
+                if [[ "${current_token:${codelen}:2}" == "${cmd_char}${close_tag}" ]]; then
+                    # done
+                    val=$(eval ${current_token:0:${codelen}})
+                    newoutput="${newoutput}${val}"
+                    current_token=""
+                    current_state="${BODY}"
+                else
+                    current_token="${current_token}${c}"
+                fi
                 ;;
             *)
                 # pass
