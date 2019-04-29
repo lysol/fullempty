@@ -31,9 +31,6 @@ for n in $workfiles; do
     . "${n}"
 done
 
-# set the post list in the base template so it can be used later
-templatevars[postitems]=$(post_links)
-
 echo Second pass
 for n in $workfiles; do
     echo "Working on ${n} (again)"
