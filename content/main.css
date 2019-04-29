@@ -8,12 +8,25 @@
             max-width: 960px;
         }
 
-        h1 {
-            border-bottom: .8px solid #000;
+        h6 {
+            border-top: .8px dotted #000;
         }
 
-        h6 {
-            border-top: .8px solid #000;
+        cite {
+            font-style: normal;
+        }
+
+        a img {
+            border: 2px solid;
+            padding: 1px;
+        }
+
+        h1 a img {
+            margin-bottom: -5px;
+        }
+
+        h1 a.back img {
+            margin-bottom: -2px;
         }
 
         .title-date {
@@ -43,8 +56,4 @@
 
         .back {
             font-size: 14pt;
-        }
-
-        cite {
-            font-style: normal;
         }
