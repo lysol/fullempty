@@ -29,22 +29,10 @@ for n in $workfiles; do
 
     # source file to set variables
     . "${n}"
-    if [[ "${docvars[type]}" == 'post' ]]; then
-        echo "$(date -d "${docvars[date]}" '+%s')${tab}${docvars[filename]}${tab}${docvars[title]}">>"${POST_INDEX}"
-    fi
 done
-
-posttext=""
-IFS=$'\n'
-for line in $(cat "${POST_INDEX}" | sort -nr); do
-    IFS=$'\t' vars=(${line})
-    # abuse the previous IFS little to put a newline in lol
-    posttext="${posttext}${IFS}<li>$(date -d @"${vars[0]}" '+%Y-%m-%d') <a href=\"${vars[1]}\">${vars[2]}</a></li>"
-done
-unset IFS
 
 # set the post list in the base template so it can be used later
-templatevars[postitems]=${posttext}
+templatevars[postitems]=$(post_links)
 
 echo Second pass
 for n in $workfiles; do
