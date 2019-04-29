@@ -3,8 +3,6 @@
 # $templatevars are used as the base variables for every template,
 # sourced from default.json
 declare -A templatevars
-templatevars['year']=$(date +%Y)
-templatevars['date']=$(date)
 # set default template vars
 . content/default.sh
 POST_INDEX="${BUILD_DIR}${POST_INDEX}"
