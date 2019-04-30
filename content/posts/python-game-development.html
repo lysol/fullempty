@@ -1,0 +1,96 @@
+<div class="post">
+    <p>Let's start this off properly: I'm not a professional game developer, but
+    I've been writing unfinished games since childhood, and almost none of them end
+    up in a playable state, let alone anything fun. But, over the years, they've served
+    as a practice for improving my programming skills.</p>
+
+    <p>Games have proven to be the hardest challenge for those
+    three needs, as I tend to end up with multi-hundred line main loops and become
+    frustrated and bored. I get intensely excited about an idea for a game, but if
+    I can't strike while the iron's hot, the choices for code paths and game
+    design patterns are hard to maintain focus on.</p>
+
+    <p>Over the last couple of months, I made more progress than usual, especially
+    with Python and its various inefficiences. The goal I set for myself was to make
+    a simple SimCity-alike with some weird stuff in it. I did not finish, but I did build
+    a fast, efficient framework with an infinitely growing map.</p>
+
+    <h2>Beginnings</h2>
+
+    <p>I initially started with <a href="https://www.pygame.org">pygame</a>, but as
+    with every other experience I've had with it, the combination of badly performing
+    core features and general bugginess prevented me from going much further. Pygame
+    can be very good for getting started, making very simple toys,
+    and many of the interfaces are easy to understand. But by the time you need to do
+    something more complicated, there are no real intuitive tools for doing so,
+    so you end up rolling your own. One exception: The <a href="https://www.pygame.org/docs/ref/rect.html">Rect</a> class. I used the shit out of these, to the point that I reimplemented
+    it in the next iteration of this project.</p>
+
+    <p>Once the limits of pygame prevented me from moving further, I settled on
+    <a href="https://bitbucket.org/pyglet/pyglet/wiki/Home">pyglet</a>. Pyglet's main
+    advantage over pygame is that it is hardware-accelerated by default, instead of bolted on. in
+    Pygame's OpenGL acceleration is also intensely buggy, and limits the
+    feature set arbitrarily, instead of augmenting it.</p>
+
+    <p>Pyglet is less intuitive to use than pygame, but far more powerful if you spend
+    a little more time with the docs and tutorials. You will be furiously searching for
+    additional references the whole time, but at a certain point the entire architecture
+    of pyglet <em>clicks</em>. Pyglet's sprite class is incredibly powerful, and for a time
+    I did not think so, until I realized it was my own code working against it.</p>
+
+    <p>For the pygame version of the game, once I started maxing out time spent within
+    frame loops, I had to resort to implementing a
+    <a href="https://en.wikipedia.org/wiki/Quadtree">quadtree</a> from scratch, mostly
+    because I wanted the challenge, and because I wanted to tightly couple some features
+    specific to this game. Once I switched to Pyglet, it became unnecessary for performance
+    and I went back to a simple multidimensional dict, indexing sections of the map using
+    keys formed from coordinates modulused by an arbitrary chunk size, as it was
+    simpler to maintain and far faster than what I'd done previously.</p>
+
+    <h2>Getting somewhere</h2>
+
+    <p>Pyglet provides a fairly shallow abstraction of OpenGL's interface, making it
+    far less stateful, and allowing you to use more object-oriented principles while working
+    on your project. However, I ended up using some of pyglet's OpenGL bindings directly,
+    which I don't think is unexpected. Pyglet also makes use of a batch system, wherein you
+    attach individual sprites to a given batch object, and draw that batch, which is a common,
+    efficient pattern and present in <a href="http://www.monogame.net/">MonoGame</a> as well.</p>
+
+    <p>Shoving thousands of sprites into a single batch did not scale well, but simply
+    having a 1:1 batch-to-chunk design proved to be incredibly fast. For a while I thought
+    it was not performing well, and ended up reimplementing a lot of my code as Python C API
+    classes, before realizing my problem was a single stray, expensive loop within in my main
+    game loop. Ooooops</p>
+
+    <p>C classes were a fun digression. I'd never written Python classes in C from scratch,
+    and I kept their concerns focused. In most cases I simply translated the Python version
+    to C. I left the classes in Pythin in places where I would have had to do complex memory
+    management. Once exception: I adapted a <a href="https://mrl.nyu.edu/~perlin/noise/">Perlin noise</a> implementation in C,
+    because it is entirely cpu bound code that benefits greatly from being compiled.
+    I use this for generating tesselated backgrounds for each chunk.</p>
+
+    <p>I also have some sprite types (which I subclass as <a href="https://github.com/lysol/birch/blob/master/birch/cells/cell.py">Cell</a>) that use a spritesheet to auto-tesselate.
+    I considered this necessary because in the original SimCity, this is how roads and rails
+    appear when you add them to your city. These are somewhat hard to do right. It is
+    fine detail work, involving both your sprite sheet and your code. I ended up with
+    a slightly overcomplicated system of mask-like structures and texture name suffixes. I am
+    not sure I'd do it this way again.</p>
+
+    <h2>Shelving it</h2>
+
+    <p>I made reasonable progress before I became overwhelmed by both the game and code
+    design decisions. I did not finish it, but I largely finished
+    what I set out to do. I had a functioning simulation loop, even if it was very simple.
+    I have a very efficient framework for adding any cell type to the game state, and
+    a great deal of fast, reusable code. I have uploaded the entire works to Github, named
+    <a href="https://github.com/lysol/birch">Birch</a>, because I started with simple
+    tree textures to test game features.</p>
+
+    <p>My next goal is to rework any tightly coupled game features and genericize the
+    project, so I can use the framework for some kind of roguelike, maybe with
+    city-building features not unlike <a href="https://rimworldgame.com/">Rimworld</a> or
+    even strategy games such as <a href="https://en.wikipedia.org/wiki/Age_of_Empires">Age of Empires</a>. Having an efficient game state that can handle very large maps without
+    transitions is a great tool to have, one I shouldn't have to write again, even if I
+    probably will out of boredom.</p>
+</div>
+
