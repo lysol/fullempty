@@ -29,6 +29,10 @@
             margin-bottom: -2px;
         }
 
+        li {
+            margin-bottom: 1em;
+        }
+
         .title-date {
             font-size: 12pt;
         }
