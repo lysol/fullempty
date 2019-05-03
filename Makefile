@@ -5,7 +5,7 @@ BUILD_DIR = ./build/
 SYNC_TARGET = loam:~/public_html/
 POST_INDEX = posts.csv
 
-all: build sync clean
+all: posttime build sync clean
 
 build:
 	@ echo Building.
@@ -14,6 +14,10 @@ build:
 sync:
 	@echo Syncing to server
 	rsync -atv $(BUILD_DIR) $(SYNC_TARGET)
+
+posttime:
+	@echo Fixing timestamps on files
+	./src/posttime.sh
 
 clean:
 	@echo Cleaning.
