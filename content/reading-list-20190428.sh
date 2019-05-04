@@ -1,0 +1,2 @@
+docvars[date]='Sun Apr 28 17:30:00 CDT 2019'
+docvars[description]='<p><cite><a href="https://www.upress.umn.edu/book-division/books/a-guide-to-the-architecture-of-minnesota">A Guide to the Architecture of Minnesota</a>, David Gebhard, Tom Martinson, 1977</cite></p><p><a href="http://www.dalejtravis.com/barn/barnmn.htm">List of Round Barns in Minnesota</a></p><p><a href="http://www.jacana.plus.com/pattern/P0.htm">A Pattern Language in Hypertext Glory</a></p>'
