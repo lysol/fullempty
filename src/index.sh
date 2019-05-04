@@ -10,13 +10,14 @@ POST_INDEX="${BUILD_DIR}${POST_INDEX}"
 mkdir -p $(dirname "${POST_INDEX}")
 
 for n in $(ls -1 src/*.func.sh); do
+    echo "including $n"
     . "${n}"
 done
 
 # here we iterate over every file, copy the values from $templatevars,
 # and include anything from the json file
 
-workfiles=$(ls -1 content/*.post.sh | grep -v default.sh)
+workfiles=$(ls -1t content/*.sh | grep -v default.sh)
 tab=$'\t'
 
 echo First pass
@@ -42,7 +43,12 @@ for n in $workfiles; do
     . "${n}"
 
     # "template" is a special value that is the location of the base template to include
-    output=$(< "${docvars['template']}")
+    if [ "${docvars[template]}" == "" ]; then
+        echo "Using blank template for ${n}."
+        output="<% content %>"
+    else
+        output=$(< "${docvars['template']}")
+    fi
 
     # if "date" is present, make a nice human-readable date.
     if [ ${docvars[date]+_} ]; then

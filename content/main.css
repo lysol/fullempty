@@ -8,6 +8,10 @@
             max-width: 960px;
         }
 
+        h3 a {
+            vertical-align: -1px;
+        }
+
         h6 {
             border-top: .8px dotted #000;
         }
