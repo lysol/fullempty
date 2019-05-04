@@ -18,7 +18,13 @@ and `make clean` to delete everything in the build dir `build`.
 
 Or, simply run `make` to all those steps in order.
 
-## template tag types
+## Template Tag Types
 
 * `<% key %>` includes the specified key in `$docvars` in the document.
 * `<$ echo some bash $>` is `eval`'d in the same loop, in the scope of the main bash script.
+
+## Extending It With Functions
+
+Anything named `.func.sh` in `src` is included in `src/index.sh`. A good pattern is writing custom code and including it here instead of in templates themselves, not only from a readability perspective, but because I'm pretty sure the parser I wrote will fall over if you run it in the same room as a bottle of vermouth.
+
+There are routines for enumerating the various rendered items and doing things like building RSS files, for example.
