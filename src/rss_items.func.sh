@@ -6,9 +6,16 @@ function rss_items {
         for k in "${!templatevars[@]}"; do docvars[$k]="${templatevars[$k]}"; done
         . $fn
         rssdate=$(date -d "${docvars[date]}" -R)
+        if [ "${docvars[content]}" == "" ]; then
+            docvars[content]="${docvars[description]}"
+        else
+            contentfn="${docvars[content]}"
+            filecontent="$(< "${contentfn}")"
+            docvars[content]="${filecontent}"
+        fi
         echo "<item> \
   <title>${docvars[title]}</title> \
-  <description><![CDATA[${docvars[description]}]]></description> \
+  <description><![CDATA[${docvars[content]}]]></description> \
   <link>https://fullempty.sh/${docvars[filename]}</link> \
   <guid isPermaLink='true'>https://fullempty.sh/${docvars[filename]}</guid> \
   <pubDate>${rssdate}</pubDate> \
