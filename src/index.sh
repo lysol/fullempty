@@ -17,24 +17,11 @@ done
 # here we iterate over every file, copy the values from $templatevars,
 # and include anything from the json file
 
-workfiles=$(ls -1t content/*.sh | grep -v default.sh)
+workfiles=$(ls -1t content/*.sh | grep -v default.sh | sort)
 tab=$'\t'
 
-echo First pass
 for n in $workfiles; do
-    echo "Processing $n"
-
-    # initialize document associative array prefilled with templatevars' values
-    declare -A docvars=()
-    for k in "${!templatevars[@]}"; do docvars[$k]="${templatevars[$k]}"; done
-
-    # source file to set variables
-    . "${n}"
-done
-
-echo Second pass
-for n in $workfiles; do
-    echo "Working on ${n} (again)"
+    echo "Working on ${n}"
     # initialize document associative array prefilled with templatevars' values
     declare -A docvars=()
     for k in "${!templatevars[@]}"; do docvars[$k]="${templatevars[$k]}"; done
