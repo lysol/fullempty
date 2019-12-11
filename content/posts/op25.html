@@ -1,0 +1,60 @@
+<div class="post">
+    <p><img src="https://fullempty.sh/assets/op25/op25-smaller.jpg" alt="A photograph of a Raspberry Pi with an RTL-SDR dongle attached."></p>
+
+    <p>Recently I've been working on a cheap, compact, portable setup for listening to
+    <a href="https://en.wikipedia.org/wiki/Project_25">P25</a> radio. At least in Minnesota, nearly every single state, county, and city
+    agency has migrated to using P25, with the only remaining services on UHF or VHF patched in from digital, specifically fire dispatch.</p>
+
+    <p>I largely followed <a href="https://www.hagensieker.com/wordpress/2018/07/17/op25-for-dummies/">this guide</a>,
+    but there are extra details I stumbled on that were necessary to actually make it work for me.</p>
+
+    <p>You'll need a functioning rtl-sdr, Raspberry Pi, and some kind of speaker to plug into the audio-out. I just
+    use a JBL bluetooth speaker with aux-in I had laying around.</p>
+
+    <p>Secondly, check out current versions of the <a href="http://git.osmocom.org/rtl-sdr/">rtl-sdr driver</a>,
+    and the <span class="code">max</span> branch of <a href="http://git.osmocom.org/op25">op25</a>. On Raspbian, you'll need to install
+    <span class="code">libusb-1.0-0-dev</span> and <span class="code">cmake</span> to compile the rtl-sdr driver and
+    op25. For rtl-sdr, just <span class="code">mkdir build</span>, i<span class="code">cd</span> there, type <span class="code">cmake ..</span>,
+    then <span class="code">make</span>, then <span class="code">make install</span>.</p>
+
+    <p>The guide above mentions a different git repo for op25. I use the max branch because the curses interface wouldn't
+    work for me without switching branches, plus it's newer.</p>
+
+    <p>Where my instructions differ from the post above is on the subject of tuning. If you have a cheap (non-TCXO)
+    rtl-sdr, it's going to be inaccurate. This might be fine for just tuning manually and listening, but trunked systems
+    need tuning accuracy. op25 can compensate to some degree, but I had a great deal of trouble making my setup work
+    until I had the ppm setting nearly perfect (within 1-2 ppm). If this paragraph doesn't make sense, you need to mess
+    with your rtl-sdr some more before trying this setup.</p>
+
+    <p>Even if it still doesn't make sense, run <span class="code">rtl_test -s 960000 -p</span>. Wait about a minute for
+    the ppm to average out, then use that with the <span class="code">-q</span> switch for <span class="code">rx.py</span>.
+    This would be the same ppm setting you'd use with <span class="code">rtl_fm</span>.</p>
+
+    <p>Other than that, the above guide is what you should follow. On my setup, I have a 3.5" touchscreen LCD attached
+    to my Raspberry Pi, and a link to a shell script on the desktop with the following contents:</p>
+
+    <p class="code">
+        #!/bin/bash<br>
+        <br>
+        cd ~/scanner<br>
+        ./rx.py -q 62.5 -S 960000 --args="rtl" -N 'LNA:40' -f "852.3625e6" -o 25000 -T trunk.tsv -V -U -w -2 -l http:0.0.0.0:8765 &<br>
+        sleep 4<br>
+        chromium-browser "http://0.0.0.0:8765"
+    </p>
+
+    <p>I mentioned the curses interface above, but I honestly prefer the web interface. I still could not make keyboard
+    commands work in the curses interface, so operating talk group holds/lockouts/skips via the web interface is more convenient. I
+    also have a command to launch a web browser with this interface for display on the LCD, which is useful because
+    I'd prefer to not have a keyboard attached while taking this around on a battery.</p>
+
+    <p>My next possible to-do items:</p>
+    <ul>
+        <li>Move the works to a Raspberry Pi Zero, giving me room in a case to stuff the rtl-sdr dongle</li>
+        <li>Find some way to add a UPS hat and still use the screen and case</li>
+        <li>Affixing the SMA antenna mount to the case, add a rubber duck antenna for that shitty HT look</li>
+        <li>Write scripts to provide a more touch friendly interface</li>
+        <li>Add a smaller speaker I can mount in the case</li>
+        <li>Add the capability to record with the press of a button</li>
+    </ul>
+</div>
+
