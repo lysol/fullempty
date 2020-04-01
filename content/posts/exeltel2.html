@@ -1,0 +1,58 @@
+<div class="post">
+
+    <img src="https://fullempty.sh/assets/exeltel2/exeltel2.jpg" alt="Exeltel II">
+
+    <p>From time to time, I volunteer some time to work on the vintage hardware that comes through the door at
+    <a href="https://freegeektwincities.org/">Free Geek Twin Cities</a>, and participate in their
+    <a href="https://discord.gg/UZAUCAB">Discord</a>. Usually the stuff that rolls in is your usual spider
+    egg-infested Pentium IIIs and what-have-you, but once in a while something like a Compaq Portable or
+    more another more unique computer will roll in. One item that came in was the Exelvision
+    <a href="http://www.acrpc.net/exelvision-exeltel-ii/">Exeltel II</a>.</p>
+
+    <p>Exelvision is a French company that produced a line of 8-bit computers and terminals. Their terminals
+    were used to connect to <a href="https://en.wikipedia.org/wiki/Minitel">Minitel</a>, an interactive videotex
+    service that was wildly popular in France well into the current era of ubiquitous internet access. In the
+    United States, there was a stalled attempt  by USWest to bring this service to two test markets,
+    Minneapolis (around which I reside), and Omaha.</p>
+
+    <p>Other people in the area have documented the Exteltel to an extent, but I hadn't seen a teardown. I
+    recorded some video and photographs, but not really enough to do a comprehensive post on tearing it down.
+    My goal was to see if I could open it up and find a ROM to dump.</p>
+
+    <p>The bottom of the case had an assortment of screws, and to my surprise the top case comes apart in pieces.
+    The modem board has its own cover that can be removed independently from the rest of the case. Once the
+    modem case top is removed, the cover for the CRT can be removed with a little bit of angling. This was my
+    first time discharging a CRT, but I had left it plugged in and powered off overnight. I assume there is
+    a bleeder resistor, so when I finally shorted the anode there wasn't a pop. This is a monochrome CRT,
+    so the wires that need to be disconnected are minimal. The CRT sits on top of a power board that was mostly
+    easy to remove and set aside as one assembly, giving me access to the mainboard (finally).</p>
+
+    <p>The main board is covered by RF shielding, which is not surprising given how close the power board and CRT
+    are. This RF shield is soldered to one of the potentiometer's ground, which is kind of a pain in the ass.
+    I just bent it out of the way.</p>
+
+    <h2>Success</h2>
+
+    <img src="https://fullempty.sh/assets/exeltel2/mainboard.jpg" alt="Exeltel II Mainboard">
+
+    <p>There's a clearly labeled 27C512 EPROM containing the system ROM. I had never worked with EPROMS or
+    EEPROMS at this level, usually via some other interface for writing firmware, using an ISP header or
+    otherwise. I purchased an EEPROM programmer (this <a href="http://keeelectronics.com/WillemPCB5.html">Kee Electronics Willem</a> model) that can handle an array of ROMs and memory. This is a topic
+    for another post, but even if it costs a little money, get a modern one with USB. I went the parallel
+    port route, and it was silly because I ended up needing a straight-through fully-populated DB25 cable,
+    which put my cost for my programmer at about the same as I would have spent for a USB one.</p>
+
+    <p>Other people suggested I just use an Arduino or Raspberry Pi or something, but honestly even with the
+    hassle of the cable, I didn't want to have to second guess this tool in addition to the work I was doing
+    on the Exeltel. I needed to bust out an old Thinkpad T30 to get it done, but once I was set it up it
+    was short work to actually dump the EPROM.</p>
+
+    <p>I'm still in the process of analyzing this ROM. This system uses a TMS7000 series CPU, the TMS70C02.
+    I'm still working through the documentation, but the tools out there to disassemble and analyze this kind of
+    software is limited, especially given my skillset (no skills whatsoever for this sort of thing).
+    I settled on running the strings command on the ROM for now, while I search it more, using this <a href="https://archive.org/details/bitsavers_tidataBook986_20608782?q=tms70c02">TMS7000 Data Manual</a>.</p>
+
+    <p>I've also ploaded the firmware to <a href="https://archive.org/details/exelteliiappl15">archive.org</a>, along
+    with a photograph of the mainboard.</p>
+</div>
+
