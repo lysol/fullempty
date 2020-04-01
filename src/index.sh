@@ -1,4 +1,24 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+unameOut="$(uname -s)"
+case "${unameOut}" in
+    Linux*)     machine=Linux;;
+    Darwin*)    machine=Mac;;
+    *)          machine=Other
+esac
+
+case "${machine}" in
+    Mac*)    TOUCH=gtouch
+                DATE=gdate
+                ;;
+    *)          TOUCH=touch
+                DATE=date
+                ;;
+esac
+
+echo "Build running on ${machine}"
+echo "touch command is ${TOUCH}"
+echo "date command is ${DATE}"
 
 # $templatevars are used as the base variables for every template,
 # sourced from default.json
@@ -39,7 +59,7 @@ for n in $workfiles; do
 
     # if "date" is present, make a nice human-readable date.
     if [ ${docvars[date]+_} ]; then
-        docvars[nicedate]="$(date -d "${docvars[date]}" '+%Y-%m-%d')"
+        docvars[nicedate]="$(${DATE} -d "${docvars[date]}" '+%Y-%m-%d')"
     fi
 
     # "content" is more special, it's a filename that we cat the contents of to get the
@@ -71,7 +91,7 @@ for n in $workfiles; do
     # create any intermediate directories
     mkdir -p $(dirname $outfn)
     echo "${output}">"${outfn}"
-    touch -d "${docvars[date]}" "${outfn}"
+    $TOUCH -d "${docvars[date]}" "${outfn}"
 done
 
 # finally, copy assets

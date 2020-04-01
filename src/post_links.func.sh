@@ -6,7 +6,7 @@ function post_links {
         for k in "${!templatevars[@]}"; do docvars[$k]="${templatevars[$k]}"; done
         . $fn
         if [[ ${docvars[type]} == 'post' ]]; then
-            echo "<li><i>$(date -d "${docvars[date]}" '+%Y-%m-%d')</i><br><a href=\"${docvars[filename]}\">${docvars[title]}</a></li>"
+            echo "<li><i>$(${DATE} -d "${docvars[date]}" '+%Y-%m-%d')</i><br><a href=\"${docvars[filename]}\">${docvars[title]}</a></li>"
         fi
     done
 }

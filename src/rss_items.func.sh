@@ -5,7 +5,7 @@ function rss_items {
         declare -A docvars=()
         for k in "${!templatevars[@]}"; do docvars[$k]="${templatevars[$k]}"; done
         . $fn
-        rssdate=$(date -d "${docvars[date]}" -R)
+        rssdate=$(${DATE} -d "${docvars[date]}" -R)
         if [ "${docvars[content]}" == "" ]; then
             docvars[content]="${docvars[description]}"
         else
