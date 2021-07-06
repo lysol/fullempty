@@ -65,3 +65,9 @@
         .back {
             font-size: 14pt;
         }
+
+        .float-left {
+            float: left;
+            margin-right: 1em;
+            margin-bottom: 1em;
+        }
