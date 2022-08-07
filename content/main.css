@@ -8,6 +8,10 @@
             max-width: 960px;
         }
 
+        img.autosize {
+            width: 90%
+        }
+
         h3 a {
             vertical-align: -1px;
         }
