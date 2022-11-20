@@ -34,14 +34,10 @@ for n in $(ls -1 src/*.func.sh); do
     . "${n}"
 done
 
-# here we iterate over every file, copy the values from $templatevars,
-# and include anything from the json file
 
-workfiles=$(ls -1t content/*.sh | grep -v default.sh | sort)
-tab=$'\t'
-
-for n in $workfiles; do
-    echo "Working on ${n}"
+function work_on() {
+    n="$1"
+    echo -n "${n} "
     # initialize document associative array prefilled with templatevars' values
     declare -A docvars=()
     for k in "${!templatevars[@]}"; do docvars[$k]="${templatevars[$k]}"; done
@@ -51,7 +47,7 @@ for n in $workfiles; do
 
     # "template" is a special value that is the location of the base template to include
     if [ "${docvars[template]}" == "" ]; then
-        echo "Using blank template for ${n}."
+        echo -n "${n}: Using blank template"
         output="<% content %>"
     else
         output=$(< "${docvars['template']}")
@@ -67,7 +63,7 @@ for n in $workfiles; do
     contentPath="${docvars[content]}"
 
     if [ -z "${contentPath}" ]; then
-        echo "No content property in ${n}. Skipping."
+        echo "${n}: No content property, skipping"
         continue
     fi
 
@@ -92,8 +88,24 @@ for n in $workfiles; do
     mkdir -p $(dirname $outfn)
     echo "${output}">"${outfn}"
     $TOUCH -d "${docvars[date]}" "${outfn}"
+    echo -n "."
+}
+
+# here we iterate over every file, copy the values from $templatevars,
+# and include anything from the json file
+
+workfiles=$(ls -1t content/*.sh | grep -v default.sh | sort)
+tab=$'\t'
+
+echo "Working on content"
+for n in $workfiles; do
+    work_on "${n}" &
 done
 
+wait
+echo
+
 # finally, copy assets
-echo copying assets
+echo "copying assets"
 rsync -at content/assets/ $BUILD_DIR/assets/
+echo "done."
